@@ -371,16 +371,128 @@ a {
   box-shadow:0 10px 30px rgba(0,0,0,0.08);
 }
 
-.top-btn.show{
-  opacity:1;
-  visibility:visible;
-  transform:translateY(0);
+/* PREMIUM TOP BUTTON */
+.top-progress {
+  position: fixed;
+  right: 34px;
+  bottom: 34px;
+  width: 96px;
+  height: 96px;
+  border: 0;
+  border-radius: 50%;
+  background: #111;
+  color: #f4efe4;
+  cursor: pointer;
+  z-index: 1200;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(30px) scale(0.85);
+  transition: 
+    opacity 0.35s ease,
+    visibility 0.35s ease,
+    transform 0.35s cubic-bezier(.2,1.6,.4,1);
 }
 
-.top-btn:hover{
-  transform:scale(1.12) rotate(-12deg);
-  background:#111;
-  color:#fff;
+.top-progress.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.top-progress:hover {
+  transform: translateY(-6px) scale(1.08) rotate(-4deg);
+}
+
+.progress-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-bg,
+.progress-line {
+  fill: none;
+  stroke-width: 4;
+}
+
+.progress-bg {
+  stroke: rgba(244, 239, 228, 0.22);
+}
+
+.progress-line {
+  stroke: #e5ff3f;
+  stroke-linecap: round;
+  stroke-dasharray: 326.72;
+  stroke-dashoffset: 326.72;
+  transition: stroke-dashoffset 0.12s linear;
+}
+
+.top-arrow {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1;
+  transition: transform 0.35s ease;
+}
+
+.top-progress:hover .top-arrow {
+  transform: translateY(-5px);
+}
+
+.top-rotate-text {
+  position: absolute;
+  inset: -18px;
+  border-radius: 50%;
+  animation: rotateText 8s linear infinite;
+  pointer-events: none;
+}
+
+.top-rotate-text span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 132px;
+  transform: translate(-50%, -50%);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1.8px;
+  text-align: center;
+  color: #111;
+}
+
+.top-progress:hover .top-rotate-text {
+  animation-duration: 3.5s;
+}
+
+@keyframes rotateText {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .top-progress {
+    right: 18px;
+    bottom: 18px;
+    width: 76px;
+    height: 76px;
+  }
+
+  .top-arrow {
+    font-size: 28px;
+  }
+
+  .top-rotate-text {
+    display: none;
+  }
 }
 
 @media(max-width:768px){

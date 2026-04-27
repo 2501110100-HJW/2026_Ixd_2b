@@ -37,18 +37,35 @@ sections.forEach((section) => {
 
 /* TOP BUTTON */
 const topBtn = document.getElementById("topBtn");
+const progressLine = document.querySelector(".progress-line");
 
-window.addEventListener("scroll", () => {
-  if(window.scrollY > window.innerHeight * 0.7){
+const radius = 52;
+const circumference = 2 * Math.PI * radius;
+
+progressLine.style.strokeDasharray = circumference;
+progressLine.style.strokeDashoffset = circumference;
+
+function updateTopButton() {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = docHeight > 0 ? scrollTop / docHeight : 0;
+
+  const offset = circumference - progress * circumference;
+  progressLine.style.strokeDashoffset = offset;
+
+  if (scrollTop > window.innerHeight * 0.55) {
     topBtn.classList.add("show");
-  }else{
+  } else {
     topBtn.classList.remove("show");
   }
-});
+}
+
+window.addEventListener("scroll", updateTopButton);
+window.addEventListener("load", updateTopButton);
 
 topBtn.addEventListener("click", () => {
   window.scrollTo({
-    top:0,
-    behavior:"smooth"
+    top: 0,
+    behavior: "smooth"
   });
 });
