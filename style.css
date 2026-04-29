@@ -232,6 +232,7 @@ a {
   border-radius: 28px;
   background:url(images/season_promotion_banner.png) no-repeat;
   background-size: 1200px 420px, cover;
+  background-position: center;
   transition: 0.45s;
 }
 
