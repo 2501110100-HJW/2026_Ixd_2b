@@ -98,25 +98,25 @@
     <div class="section-label">Works</div>
 
     <div class="works-grid">
-        <article class="work-card">
-        <div class="work-img"></div>
-        <p>Brand Campaign</p>
-        <h3>Season Promotion Banner</h3>
-        </article>
+    <article class="work-card" data-title="Season Promotion Banner" data-desc="브랜드 시즌 프로모션 배너 디자인">
+    <div class="work-img"></div>
+    <p>Brand Campaign</p>
+    <h3>Season Promotion Banner</h3>
+    </article>
 
-        <article class="work-card">
+        <article class="work-card" data-title="Mobile App Redesign" data-desc="모바일 앱 리디자인">
         <div class="work-img"></div>
         <p>UI Renewal</p>
         <h3>Mobile App Redesign</h3>
         </article>
 
-        <article class="work-card">
+        <article class="work-card" data-title="Product Detail Page" data-desc="상품 상세페이지 디자인">
         <div class="work-img"></div>
         <p>Commerce</p>
         <h3>Product Detail Page</h3>
         </article>
 
-        <article class="work-card">
+        <article class="work-card" data-title="Interactive Web Design" data-desc="인터랙티브 웹 디자인">
         <div class="work-img"></div>
         <p>Portfolio</p>
         <h3>Interactive Web Design</h3>
@@ -142,6 +142,18 @@
     </button>
 
 </main>
+
+<div class="work-modal" id="workModal">
+    <button class="modal-close" id="modalClose">×</button>
+
+    <div class="modal-content">
+    <div class="modal-img" id="modalImg"></div>
+    <div class="modal-text">
+    <p id="modalDesc"></p>
+    <h2 id="modalTitle"></h2>
+    </div>
+    </div>
+</div>
 
 <script src="script.js"></script>
 </body>
