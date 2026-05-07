@@ -35,6 +35,8 @@ sections.forEach((section) => {
   observer.observe(section);
 });
 
+
+
 /* WORKS MODAL */
 const workCards = document.querySelectorAll(".work-card");
 const workModal = document.getElementById("workModal");
