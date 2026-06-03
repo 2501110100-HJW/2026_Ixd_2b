@@ -36,8 +36,9 @@ sections.forEach((section) => {
 });
 
 
+
 /* HOME ONLY SCROLLMAGIC INTERACTION
-  Reference structure: pinned hero + floating digital objects.
+   Reference structure: pinned hero + floating digital objects.
    This scene targets #home only, so About / Skills / Works / Contact stay unchanged. */
 function initHomeScrollMagic() {
   const home = document.querySelector("#home");
@@ -59,12 +60,6 @@ function initHomeScrollMagic() {
       letterSpacing: "-0.115em",
       ease: Power2.easeOut
     }, 0)
-
-    .to("#home .hero-index", 0.8, {
-      y: -18,
-      opacity: 0.2,
-      ease: Power2.easeOut
-    }, 0.2)
 
     .to("#home .hero-eyebrow", 0.8, {
       x: -36,
@@ -181,7 +176,7 @@ function initHomeScrollMagic() {
   new ScrollMagic.Scene({
     triggerElement: "#home",
     triggerHook: 0,
-    duration: "180%"
+    duration: "185%"
   })
     .setPin("#home")
     .setTween(homeTimeline)
