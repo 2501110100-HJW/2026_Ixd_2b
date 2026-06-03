@@ -36,8 +36,6 @@ sections.forEach((section) => {
 });
 
 
-
-<<<<<<< HEAD
 /* HOME ONLY SCROLLMAGIC INTERACTION
   Reference structure: pinned hero + floating digital objects.
    This scene targets #home only, so About / Skills / Works / Contact stay unchanged. */
@@ -192,49 +190,6 @@ function initHomeScrollMagic() {
 
 window.addEventListener("load", initHomeScrollMagic);
 
-=======
-/* WORKS MODAL */
-const workCards = document.querySelectorAll(".work-card");
-const workModal = document.getElementById("workModal");
-const modalClose = document.getElementById("modalClose");
-const modalImg = document.getElementById("modalImg");
-const modalTitle = document.getElementById("modalTitle");
-const modalDesc = document.getElementById("modalDesc");
-
-workCards.forEach((card) => {
-  card.addEventListener("click", () => {
-    const img = card.querySelector(".work-img");
-    const style = window.getComputedStyle(img).backgroundImage;
-
-    modalImg.style.backgroundImage = style;
-    modalTitle.textContent = card.dataset.title;
-    modalDesc.textContent = card.dataset.desc;
-
-    workModal.classList.add("show");
-    document.body.classList.add("modal-open");
-  });
-});
-
-modalClose.addEventListener("click", closeWorkModal);
-
-workModal.addEventListener("click", (e) => {
-  if (e.target === workModal) {
-    closeWorkModal();
-  }
-});
-
-window.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    closeWorkModal();
-  }
-});
-
-function closeWorkModal() {
-  workModal.classList.remove("show");
-  document.body.classList.remove("modal-open");
-}
-
->>>>>>> 62fd6c8a8a367ae285380258034e9c00ef06c513
 /* TOP BUTTON */
 const topBtn = document.getElementById("topBtn");
 const progressLine = document.querySelector(".progress-line");
