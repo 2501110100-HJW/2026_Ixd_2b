@@ -55,7 +55,7 @@ function initHomeScrollMagic() {
 
   homeTimeline
     .to("#home .hero-title", 1, {
-      scale: 1.08,
+      scale: 1.35,
       y: -34,
       letterSpacing: "-0.115em",
       ease: Power2.easeOut
