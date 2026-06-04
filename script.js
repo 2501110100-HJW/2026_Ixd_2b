@@ -38,10 +38,10 @@ sections.forEach((section) => {
 
 
 /* HOME ONLY SCROLLMAGIC INTERACTION
-   Updated flow:
-   1. The title starts very small.
-   2. Objects are invisible at the center.
-   3. On scroll, the title expands and objects explode outward.
+  Updated flow:
+  1. The title starts very small.
+  2. Objects are invisible at the center.
+  3. On scroll, the title expands and objects explode outward.
    This scene targets #home only, so the other sections stay unchanged. */
 function initHomeScrollMagic() {
   const home = document.querySelector("#home");
@@ -93,6 +93,12 @@ function initHomeScrollMagic() {
       letterSpacing: "-0.105em",
       ease: Power3.easeOut
     }, 0)
+
+    .to("#home .hero-index", 0.34, {
+      opacity: 1,
+      y: 0,
+      ease: Power2.easeOut
+    }, 0.08)
 
     .to("#home .hero-eyebrow", 0.34, {
       opacity: 1,
@@ -213,65 +219,91 @@ function initHomeScrollMagic() {
       ease: Power1.easeInOut
     }, 0.55)
 
-    // End of pinned scene: everything drifts slightly outward and fades,
-    // so the next section connects naturally instead of feeling abruptly cut.
-    .to("#home .hero-title", 0.36, {
-      y: -vh * 0.12,
-      opacity: 0.18,
-      scale: 1.12,
-      ease: Power2.easeInOut
-    }, 0.78)
+    // Hold the fully expanded composition instead of fading it out.
+    // The pinned scene releases while the objects remain vivid, so the next
+    // section follows naturally without a dimming transition.
+    .to("#home .hero-title", 0.32, {
+      scale: 1.07,
+      y: -vh * 0.025,
+      opacity: 1,
+      ease: Power1.easeInOut
+    }, 1.45)
 
-    .to("#home .floating-item", 0.36, {
-      opacity: 0.38,
-      scale: 1.26,
-      ease: Power2.easeInOut
-    }, 0.78)
+    .to("#home .floating-item, #home .floating-chip, #home .floating-blob", 0.32, {
+      opacity: 1,
+      ease: Power1.easeInOut
+    }, 1.45);
 
-    .to("#home .floating-chip", 0.36, {
-      opacity: 0.42,
-      scale: 1.28,
-      ease: Power2.easeInOut
-    }, 0.78)
+  // Keep a quiet scroll range after the explosion, so objects can keep floating
+  // at full visibility before the scene releases into the next section.
+  homeTimeline.to({}, 0.62, {}, 1.96);
 
-    .to("#home .floating-blob", 0.36, {
-      opacity: 0.22,
-      scale: 1.34,
-      ease: Power2.easeInOut
-    }, 0.78)
+  const floatingTargets = Array.prototype.slice.call(
+    document.querySelectorAll("#home .floating-item, #home .floating-chip, #home .floating-blob")
+  );
 
-    .to("#home .hero-bottom", 0.34, {
-      opacity: 0,
-      y: -38,
-      ease: Power2.easeInOut
-    }, 0.83)
+  let floatTweens = [];
+  let isFloating = false;
 
-    .to("#home .hero-eyebrow", 0.34, {
-      opacity: 0,
-      y: -30,
-      ease: Power2.easeInOut
-    }, 0.84)
+  function startFloatingObjects() {
+    if (isFloating) return;
+    isFloating = true;
 
-    .to("#home .hero-index", 0.34, {
-      opacity: 0,
-      y: -22,
-      ease: Power2.easeInOut
-    }, 0.84)
+    floatTweens = floatingTargets.map(function (target, index) {
+      const ampY = index % 2 === 0 ? 18 + index * 2 : -(16 + index * 2);
+      const ampX = index % 3 === 0 ? 10 : -8;
+      const rot = index % 2 === 0 ? 2.8 : -2.4;
+      const duration = 1.9 + (index % 4) * 0.28;
 
-    .to("#home .scroll-hint", 0.26, {
-      opacity: 0,
-      y: 20,
-      ease: Power2.easeInOut
-    }, 0.76);
+      return TweenMax.to(target, duration, {
+        y: "+=" + ampY,
+        x: "+=" + ampX,
+        rotation: "+=" + rot,
+        repeat: -1,
+        yoyo: true,
+        ease: Sine.easeInOut,
+        delay: index * 0.05
+      });
+    });
+  }
 
-  new ScrollMagic.Scene({
+  function stopFloatingObjects() {
+    if (!isFloating) return;
+    isFloating = false;
+
+    floatTweens.forEach(function (tween) {
+      tween.kill();
+    });
+    floatTweens = [];
+
+    // Re-sync with the ScrollMagic timeline so reverse scrolling does not leave
+    // the objects with the temporary floating offset.
+    homeTimeline.progress(homeScene.progress());
+  }
+
+  const homeScene = new ScrollMagic.Scene({
     triggerElement: "#home",
     triggerHook: 0,
-    duration: "260%"
+    duration: "320%"
   })
     .setPin("#home")
     .setTween(homeTimeline)
     .addTo(controller);
+
+  homeScene.on("progress", function (event) {
+    // Explosion is complete around the middle of the pinned scene.
+    // From there, keep the objects gently drifting at full visibility
+    // until the home pin releases.
+    if (event.progress >= 0.48 && event.progress <= 0.98) {
+      startFloatingObjects();
+    } else {
+      stopFloatingObjects();
+    }
+  });
+
+  homeScene.on("leave", function () {
+    stopFloatingObjects();
+  });
 }
 
 window.addEventListener("load", initHomeScrollMagic);
