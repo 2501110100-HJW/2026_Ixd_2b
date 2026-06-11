@@ -284,22 +284,51 @@ function initHomeScrollMagic() {
   const homeScene = new ScrollMagic.Scene({
     triggerElement: "#home",
     triggerHook: 0,
-    duration: "320%"
+    // A shorter pinned range makes one mouse-wheel action push the
+    // composition close to its maximum state instead of requiring long scrolling.
+    duration: "120%"
   })
     .setPin("#home")
     .setTween(homeTimeline)
     .addTo(controller);
 
   homeScene.on("progress", function (event) {
-    // Explosion is complete around the middle of the pinned scene.
-    // From there, keep the objects gently drifting at full visibility
-    // until the home pin releases.
-    if (event.progress >= 0.48 && event.progress <= 0.98) {
+    // The objects reach their expanded position early.
+    // As soon as that point is reached, connect directly to the floating loop.
+    if (event.progress >= 0.28 && event.progress <= 0.98) {
       startFloatingObjects();
     } else {
       stopFloatingObjects();
     }
   });
+
+  // One-wheel acceleration: the first downward wheel gesture on Home
+  // automatically advances the pinned hero to the fully expanded composition.
+  let homeAutoExpanded = false;
+
+  window.addEventListener("wheel", function (event) {
+    const sceneProgress = homeScene.progress();
+    const homeTop = home.offsetTop;
+    const inHomeRange = window.scrollY >= homeTop - 2 && window.scrollY < homeTop + window.innerHeight * 1.15;
+
+    if (!homeAutoExpanded && inHomeRange && event.deltaY > 0 && sceneProgress < 0.18) {
+      event.preventDefault();
+      homeAutoExpanded = true;
+
+      window.scrollTo({
+        top: homeTop + window.innerHeight * 0.72,
+        behavior: "smooth"
+      });
+
+      // Start the floating feeling immediately, even while the browser
+      // is smoothly scrolling to the target progress.
+      setTimeout(startFloatingObjects, 520);
+    }
+
+    if (window.scrollY < homeTop + 4 && event.deltaY < 0) {
+      homeAutoExpanded = false;
+    }
+  }, { passive: false });
 
   homeScene.on("leave", function () {
     stopFloatingObjects();
@@ -341,4 +370,55 @@ topBtn.addEventListener("click", () => {
     top: 0,
     behavior: "smooth"
   });
+});
+/* WORKS CARD POPUP MODAL */
+const workCards = document.querySelectorAll(".work-card");
+const workModal = document.getElementById("workModal");
+const modalClose = document.getElementById("modalClose");
+const modalImg = document.getElementById("modalImg");
+const modalTitle = document.getElementById("modalTitle");
+const modalDesc = document.getElementById("modalDesc");
+
+function openWorkModal(card) {
+  const title = card.dataset.title || card.querySelector("h3")?.textContent || "Work";
+  const desc = card.dataset.desc || card.querySelector("p")?.textContent || "";
+  const imgSrc = card.dataset.img;
+
+  modalTitle.textContent = title;
+  modalDesc.textContent = desc;
+
+  if (imgSrc) {
+    modalImg.style.backgroundImage = `url("${imgSrc}")`;
+  } else {
+    const cardImg = card.querySelector(".work-img");
+    modalImg.style.backgroundImage = window.getComputedStyle(cardImg).backgroundImage;
+  }
+
+  workModal.classList.add("show");
+  workModal.setAttribute("aria-hidden", "false");
+  document.body.classList.add("modal-open");
+}
+
+function closeWorkModal() {
+  workModal.classList.remove("show");
+  workModal.setAttribute("aria-hidden", "true");
+  document.body.classList.remove("modal-open");
+}
+
+workCards.forEach((card) => {
+  card.addEventListener("click", () => openWorkModal(card));
+});
+
+modalClose.addEventListener("click", closeWorkModal);
+
+workModal.addEventListener("click", (e) => {
+  if (e.target === workModal) {
+    closeWorkModal();
+  }
+});
+
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && workModal.classList.contains("show")) {
+    closeWorkModal();
+  }
 });
