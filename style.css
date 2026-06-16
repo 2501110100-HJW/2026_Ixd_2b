@@ -163,8 +163,24 @@ a {
 }
 
 .about {
-  background: #111;
-  color: #f4efe4;
+    position: relative;
+    color: #fff;
+}
+
+.about::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            rgba(0,0,0,0.65),
+            rgba(0,0,0,0.65)
+        ),
+        url("./images/about_background.jpg");
+
+    background-size: cover;
+    background-position: center;
 }
 
 .about h2 {
@@ -978,5 +994,83 @@ body.modal-open {
     width: 52px;
     height: 52px;
     font-size: 34px;
+  }
+}
+
+
+/* ===============================
+   HOME INTRO SEQUENCE
+   Black intro -> bright hero -> floating objects
+================================ */
+.home-intro {
+  position: absolute;
+  inset: 0;
+  z-index: 2200;
+  display: grid;
+  place-items: center;
+  background: #050505;
+  color: #fff;
+  pointer-events: none;
+}
+
+.intro-text {
+  position: absolute;
+  width: min(1100px, 86vw);
+  text-align: center;
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 1.18;
+  opacity: 0;
+  transform: translateY(26px) scale(0.98);
+}
+
+.intro-text-01 {
+  font-size: clamp(54px, 9vw, 140px);
+}
+
+.intro-text-02 {
+  font-size: clamp(28px, 4.6vw, 74px);
+  word-break: keep-all;
+}
+
+#home.intro-complete .hero-stage {
+  background:
+    radial-gradient(circle at 50% 48%, rgba(229, 255, 63, 0.45), transparent 26%),
+    linear-gradient(180deg, #ffffff 0%, #f4efe4 100%);
+}
+
+#home.intro-complete .hero-stage::before {
+  opacity: 1;
+}
+
+/* About background image: replace images/about_background.svg with your own file */
+.about {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #111 url("images/about_background.svg") center / cover no-repeat;
+}
+
+.about::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(17,17,17,0.88) 0%, rgba(17,17,17,0.68) 48%, rgba(17,17,17,0.36) 100%);
+}
+
+.about::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(#fff 1px, transparent 1px);
+  background-size: 4px 4px;
+  opacity: 0.08;
+}
+
+@media (max-width: 768px) {
+  .intro-text-02 {
+    font-size: clamp(24px, 8vw, 42px);
   }
 }
